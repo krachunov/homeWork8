@@ -7,12 +7,14 @@ public class MyAATree<T extends Comparable<T>> {
 		private Node rightChild;
 		private boolean isRed;
 		private int level;
+		private static final int STARTING_LEVEL = 1;
 
 		public Node(T value, Node left, Node right) {
 			setValue(value);
 			setLeftChild(left);
 			setRightChild(right);
 			setRed(false);
+			setLevel(STARTING_LEVEL);
 		}
 
 		public Node(T value) {
@@ -76,9 +78,43 @@ public class MyAATree<T extends Comparable<T>> {
 	}
 
 	public void add(T element) {
+		add(this.root, element);
+	}
+
+	public void add(Node parent, T element) {
 		if (getRoot() == null) {
-			root = new Node(element);
-			root.setLevel(1);
+			Node newElement = new Node(element);
+			setRoot(newElement);
+		} else {
+			if (parent == null) {
+				Node newElement = new Node(element);
+				parent = newElement;
+				return;
+
+			} else if (parent.getValue().compareTo(element) <= 0) {
+				if (parent.getRightChild() != null) {
+					add(parent.getRightChild(), element);
+				} else {
+					Node newRightElement = new Node(element);
+					parent.setRightChild(newRightElement);
+					newRightElement.setRed(true);
+					newRightElement.setLevel(parent.getLevel());
+					return;
+				}
+
+			} else {
+				if (parent.getLeftChild() != null) {
+					add(parent.getLeftChild(), element);
+				} else {
+					Node newLeftElement = new Node(element);
+					parent.setLeftChild(newLeftElement);
+					int currentParentLevel = parent.getLevel();
+					parent.setLevel(currentParentLevel + 1);
+					return;
+				}
+
+			}
 		}
+
 	}
 }
