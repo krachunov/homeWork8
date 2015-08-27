@@ -116,10 +116,12 @@ public class MyAATree<T extends Comparable<T>> {
 
 			}
 		}
-		if (parent.getLeftChild() != null && parent.getRightChild() != null) {
-			int newLevel = Math.max(parent.getLeftChild().getLevel(), parent
-					.getRightChild().getLevel()) + 1;
-			parent.setLevel(newLevel);
+		if (parent != null) {
+			if (parent.getLeftChild() != null && parent.getRightChild() != null) {
+				int newLevel = Math.max(parent.getLeftChild().getLevel(),
+						parent.getRightChild().getLevel()) + 1;
+				parent.setLevel(newLevel);
+			}
 		}
 
 		skew(parent);
@@ -127,15 +129,24 @@ public class MyAATree<T extends Comparable<T>> {
 	}
 
 	private void split(Node parent) {
-		if (parent.getRightChild().getRightChild().getLevel() == parent
-				.getLevel()) {
-			rotateLeft(parent);
+		if (parent != null) {
+			if (parent.getRightChild() != null
+					&& parent.getRightChild().getRightChild() != null) {
+				if (parent.getRightChild().getRightChild().getLevel() == parent
+						.getLevel()) {
+					rotateLeft(parent);
+				}
+			}
 		}
 	}
 
 	private void skew(Node parent) {
-		if (parent.getLeftChild().getLevel() == parent.getLevel()) {
-			rotateRight(parent);
+		if (parent != null) {
+			if (parent.getLeftChild() != null) {
+				if (parent.getLeftChild().getLevel() == parent.getLevel()) {
+					rotateRight(parent);
+				}
+			}
 		}
 	}
 

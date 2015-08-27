@@ -17,7 +17,10 @@ public class AATreetest {
 		tree.add(85);
 		tree.add(80);
 		tree.add(90);
+		tree.add(45);
+		tree.add(46);
 		
+		System.out.println("sd");
 
 	}
 
