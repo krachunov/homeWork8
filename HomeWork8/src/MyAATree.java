@@ -13,7 +13,7 @@ public class MyAATree<T extends Comparable<T>> {
 			setValue(value);
 			setLeftChild(left);
 			setRightChild(right);
-			setRed(false);
+			setRed(true);
 			setLevel(STARTING_LEVEL);
 		}
 
@@ -84,6 +84,7 @@ public class MyAATree<T extends Comparable<T>> {
 	public void add(Node parent, T element) {
 		if (getRoot() == null) {
 			Node newElement = new Node(element);
+			newElement.setRed(false);
 			setRoot(newElement);
 		} else {
 			if (parent == null) {
@@ -115,6 +116,46 @@ public class MyAATree<T extends Comparable<T>> {
 
 			}
 		}
+		if (parent.getLeftChild() != null && parent.getRightChild() != null) {
+			int newLevel = Math.max(parent.getLeftChild().getLevel(), parent
+					.getRightChild().getLevel()) + 1;
+			parent.setLevel(newLevel);
+		}
+
+		skew(parent);
+		split(parent);
+	}
+
+	private void split(Node parent) {
+		if (parent.getRightChild().getRightChild().getLevel() == parent
+				.getLevel()) {
+			rotateLeft(parent);
+		}
+	}
+
+	private void skew(Node parent) {
+		if (parent.getLeftChild().getLevel() == parent.getLevel()) {
+			rotateRight(parent);
+		}
+	}
+
+	private MyAATree<T>.Node rotateRight(Node rt) {
+		Node lt = rt.getLeftChild();
+		Node q = lt.getRightChild();
+
+		lt.setRightChild(rt);
+		rt.setLeftChild(q);
+		return lt;
+
+	}
+
+	private Node rotateLeft(Node lt) {
+		Node rt = lt.getRightChild();
+		Node q = rt.getLeftChild();
+
+		rt.setLeftChild(lt);
+		lt.setRightChild(q);
+		return rt;
 
 	}
 }
