@@ -1,29 +1,31 @@
-
 public class MyIntervalTree<T extends Comparable<T>> {
 
 	@SuppressWarnings("unused")
 	private class Node {
 		private T min;
+		private T max;
 		private Node leftChild;
 		private Node rightChild;
 
-		public Node(T value, Node left, Node right) {
-			setValue(value);
-			setLeftChild(left);
-			setRightChild(right);
-
+		public Node(T min, T max) {
+			setMin(min);
+			setMax(max);
 		}
 
-		public Node(T value) {
-			this(value, null, null);
-		}
-
-		public T getValue() {
+		public T getMin() {
 			return min;
 		}
 
-		public void setValue(T value) {
-			this.min = value;
+		public void setMin(T min) {
+			this.min = min;
+		}
+
+		public T getMax() {
+			return max;
+		}
+
+		public void setMax(T max) {
+			this.max = max;
 		}
 
 		public Node getLeftChild() {
@@ -58,26 +60,26 @@ public class MyIntervalTree<T extends Comparable<T>> {
 		setRoot(null);
 	}
 
-	public void add(T element) {
-		add(this.root, element);
+	public void add(T min, T max) {
+		add(this.root, min, max);
 	}
 
-	public void add(Node parent, T element) {
+	public void add(Node parent, T min, T max) {
 		if (getRoot() == null) {
-			Node newElement = new Node(element);
+			Node newElement = new Node(min, max);
 
 			setRoot(newElement);
 		} else {
 			if (parent == null) {
-				Node newElement = new Node(element);
+				Node newElement = new Node(min, max);
 				parent = newElement;
 				return;
 
-			} else if (parent.getValue().compareTo(element) <= 0) {
+			} else if (parent.getMin().compareTo(min) <= 0) {
 				if (parent.getRightChild() != null) {
-					add(parent.getRightChild(), element);
+					add(parent.getRightChild(), min, max);
 				} else {
-					Node newRightElement = new Node(element);
+					Node newRightElement = new Node(min, max);
 					parent.setRightChild(newRightElement);
 
 					return;
@@ -85,9 +87,9 @@ public class MyIntervalTree<T extends Comparable<T>> {
 
 			} else {
 				if (parent.getLeftChild() != null) {
-					add(parent.getLeftChild(), element);
+					add(parent.getLeftChild(), min, max);
 				} else {
-					Node newLeftElement = new Node(element);
+					Node newLeftElement = new Node(min, max);
 					parent.setLeftChild(newLeftElement);
 
 					return;
@@ -98,13 +100,13 @@ public class MyIntervalTree<T extends Comparable<T>> {
 
 	}
 
-	private Node rotateRight(Node rt) {
-		Node lt = rt.getLeftChild();
-		Node q = lt.getRightChild();
+	private Node rotateRight(Node root) {
+		Node rootLeft = root.getLeftChild();
+		Node rootLeftRight = rootLeft.getRightChild();
 
-		lt.setRightChild(rt);
-		rt.setLeftChild(q);
-		return lt;
+		rootLeft.setRightChild(root);
+		root.setLeftChild(rootLeftRight);
+		return rootLeft;
 
 	}
 
